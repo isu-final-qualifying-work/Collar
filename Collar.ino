@@ -12,20 +12,22 @@
 
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define SSID = "****";
+#define PASS = "********"; 
 
 
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified();
+
 float totalvec = 0.0;
 float x, y, z;
+
 int steps = 0;
-#define WIFI_SSID "111"
-#define WIFI_PASS "11111111"
 
 void setup(){
   Serial.begin(9600); 
   Serial.println("Starting BLE work!");
 
-  BLEDevice::init("OSHEYNIK_001");
+  BLEDevice::init("COLLAR_001");
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
   BLECharacteristic *pCharacteristic =
@@ -43,7 +45,7 @@ void setup(){
     Serial.println("Не удалось найти ADXL345. Проверьте подключение.");
       while(1);
   }
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  WiFi.begin(SSID, PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
   }
@@ -76,11 +78,11 @@ void loop(){
     steps++;
   
   totalvec = vec;
-  if (http.begin(client, "http://172.20.10.2:8000/add_activity")){
+  if (http.begin(client, "http://192.168.0.103:8000/activity/settings_all")){
     http.addHeader("accept", "application/json");
     http.addHeader("Content-Type", "application/json");
     StaticJsonDocument<200> TempDataJSON;
-    TempDataJSON["collar"] = "OSHEYNIK_001";
+    TempDataJSON["collar"] = "COLLAR_001";
     TempDataJSON["x"] = x;
     TempDataJSON["y"] = y;
     TempDataJSON["z"] = z;
