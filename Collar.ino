@@ -71,13 +71,10 @@ void loop(){
   Serial.print(z); 
   Serial.println("  m/s^2 ");
   float vec = sqrt(x * x + y * y + z * z);
-  totalvec = abs(vec - totalvec);
   Serial.print("V = "); 
-  Serial.println(totalvec); 
-  if (totalvec > 8){
+  Serial.println(vec); 
+  if (vec > 1){
     steps++;
-  
-  totalvec = vec;
   if (http.begin(client, "http://192.168.0.103:8000/activity/settings_all")){
     http.addHeader("accept", "application/json");
     http.addHeader("Content-Type", "application/json");
