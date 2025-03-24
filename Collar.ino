@@ -20,6 +20,7 @@ Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified();
 
 float totalvec = 0.0;
 float x, y, z;
+float old_vec = 0.0;
 
 int steps = 0;
 
@@ -71,9 +72,10 @@ void loop(){
   Serial.print(z); 
   Serial.println("  m/s^2 ");
   float vec = sqrt(x * x + y * y + z * z);
+  totalvec = (vec + old_vec) / 2;
   Serial.print("V = "); 
-  Serial.println(vec); 
-  if (vec > 1){
+  Serial.println(totalvec); 
+  if (totalvec > 1){
     steps++;
   if (http.begin(client, "http://192.168.0.103:8000/activity/settings_all")){
     http.addHeader("accept", "application/json");
@@ -90,4 +92,5 @@ void loop(){
     Serial.println(httpResponseCode); 
     }
   }
+  old_vec = vec;
 }
